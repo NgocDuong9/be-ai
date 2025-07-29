@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product, ProductDocument } from '../schemas/product.schema';
@@ -16,7 +20,9 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     // Verify category exists
-    const category = await this.categoryModel.findById(createProductDto.category);
+    const category = await this.categoryModel.findById(
+      createProductDto.category,
+    );
     if (!category) {
       throw new BadRequestException('Category not found');
     }
@@ -38,11 +44,26 @@ export class ProductsService {
       sortOrder = 'desc',
     } = queryDto;
 
-    // Build filter object
     const filter: any = { isActive: true };
 
     if (category) {
-      filter.category = category;
+      const categoryDoc = await this.categoryModel.findOne({
+        name: { $regex: `^${category}$`, $options: 'i' },
+        isActive: true,
+      });
+
+      if (!categoryDoc) {
+        return {
+          products: [],
+          pagination: {
+            page,
+            limit,
+            total: 0,
+            pages: 0,
+          },
+        };
+      }
+      filter.category = categoryDoc._id;
     }
 
     if (brand) {
@@ -70,6 +91,7 @@ export class ProductsService {
     // Calculate pagination
     const skip = (page - 1) * limit;
 
+    console.log(filter, 'filter');
     // Execute query
     const [products, total] = await Promise.all([
       this.productModel
@@ -98,11 +120,11 @@ export class ProductsService {
       .findById(id)
       .populate('category', 'name description')
       .exec();
-    
+
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    
+
     return product;
   }
 
@@ -112,7 +134,9 @@ export class ProductsService {
 
     // Verify category exists if category is being updated
     if (updateProductDto.category) {
-      const category = await this.categoryModel.findById(updateProductDto.category);
+      const category = await this.categoryModel.findById(
+        updateProductDto.category,
+      );
       if (!category) {
         throw new BadRequestException('Category not found');
       }
@@ -128,7 +152,7 @@ export class ProductsService {
 
   async remove(id: string) {
     const product = await this.findOne(id);
-    
+
     // Soft delete by setting isActive to false
     const deletedProduct = await this.productModel
       .findByIdAndUpdate(id, { isActive: false }, { new: true })
@@ -142,13 +166,9 @@ export class ProductsService {
 
   async addImage(id: string, imagePath: string) {
     const product = await this.findOne(id);
-    
+
     const updatedProduct = await this.productModel
-      .findByIdAndUpdate(
-        id,
-        { $push: { images: imagePath } },
-        { new: true }
-      )
+      .findByIdAndUpdate(id, { $push: { images: imagePath } }, { new: true })
       .populate('category', 'name description')
       .exec();
 
@@ -157,17 +177,12 @@ export class ProductsService {
 
   async removeImage(id: string, imagePath: string) {
     const product = await this.findOne(id);
-    
+
     const updatedProduct = await this.productModel
-      .findByIdAndUpdate(
-        id,
-        { $pull: { images: imagePath } },
-        { new: true }
-      )
+      .findByIdAndUpdate(id, { $pull: { images: imagePath } }, { new: true })
       .populate('category', 'name description')
       .exec();
 
     return updatedProduct;
   }
 }
-

@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryProductDto {
   @ApiProperty({
-    example: 'category-123',
     description: 'ID danh mục',
     required: false,
   })
@@ -13,7 +12,6 @@ export class QueryProductDto {
   category?: string;
 
   @ApiProperty({
-    example: 'Adidas',
     description: 'Thương hiệu',
     required: false,
   })
@@ -22,9 +20,7 @@ export class QueryProductDto {
   brand?: string;
 
   @ApiProperty({
-    example: 100000,
     description: 'Giá tối thiểu',
-    minimum: 0,
     required: false,
   })
   @IsOptional()
@@ -34,7 +30,6 @@ export class QueryProductDto {
   minPrice?: number;
 
   @ApiProperty({
-    example: 200000,
     description: 'Giá tối đa',
     minimum: 0,
     required: false,
@@ -46,7 +41,6 @@ export class QueryProductDto {
   maxPrice?: number;
 
   @ApiProperty({
-    example: 'áo thun',
     description: 'Từ khóa tìm kiếm',
     required: false,
   })
@@ -55,9 +49,7 @@ export class QueryProductDto {
   search?: string;
 
   @ApiProperty({
-    example: 1,
     description: 'Trang',
-    minimum: 1,
     required: false,
   })
   @IsOptional()
@@ -67,7 +59,6 @@ export class QueryProductDto {
   page?: number = 1;
 
   @ApiProperty({
-    example: 10,
     description: 'Giới hạn',
     minimum: 1,
     required: false,
