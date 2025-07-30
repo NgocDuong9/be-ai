@@ -35,19 +35,34 @@ export class Order {
   @Prop({ required: true, min: 0 })
   totalAmount: number;
 
-  @Prop({ 
-    required: true, 
-    enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
-    default: 'pending'
+  @Prop({
+    required: true,
+    enum: [
+      'pending',
+      'confirmed',
+      'processing',
+      'shipped',
+      'delivered',
+      'cancelled',
+    ],
+    default: 'pending',
   })
   status: string;
 
-  @Prop()
+  @Prop({ required: true })
   shippingAddress: string;
 
   @Prop()
   notes: string;
+
+  @Prop({ required: true })
+  paymentMethod: string;
+
+  @Prop({ required: true })
+  nameClinet: string;
+
+  @Prop({ required: true })
+  phoneClinet: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
-

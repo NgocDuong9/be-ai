@@ -20,15 +20,28 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     // Verify category exists
+    console.log(createProductDto);
     const category = await this.categoryModel.findById(
       createProductDto.category,
     );
+
     if (!category) {
       throw new BadRequestException('Category not found');
     }
 
-    const product = new this.productModel(createProductDto);
-    return product.save();
+    const { priceDetail, discountPrice, ...rest } = createProductDto;
+
+    const discountPercent = (discountPrice / priceDetail) * 100;
+
+    const product = new this.productModel({
+      ...rest,
+      priceDetail,
+      discountPrice,
+      discountPercent,
+      price: priceDetail - discountPrice,
+    });
+
+    return await product.save();
   }
 
   async findAll(queryDto: QueryProductDto) {

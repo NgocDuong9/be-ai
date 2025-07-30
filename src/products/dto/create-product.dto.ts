@@ -26,7 +26,12 @@ export class CreateProductDto {
   @ApiProperty({ example: 150000, description: 'Giá sản phẩm', minimum: 0 })
   @IsNumber()
   @Min(0)
-  price: number;
+  priceDetail: number;
+
+  @ApiProperty({ example: 1500, description: 'Giá giảm', minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  discountPrice: number;
 
   @ApiProperty({ example: 'category-123', description: 'ID danh mục' })
   @IsString()

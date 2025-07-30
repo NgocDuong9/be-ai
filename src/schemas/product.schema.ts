@@ -14,6 +14,15 @@ export class Product {
   @Prop({ required: true, min: 0 })
   price: number;
 
+  @Prop({ required: true, min: 0 })
+  discountPrice: number;
+
+  @Prop({ required: true, min: 0 })
+  discountPercent: number;
+
+  @Prop({ required: true, min: 0 })
+  priceDetail: number;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
