@@ -47,3 +47,6 @@ export class Product {
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+// Helpful indexes for common queries
+ProductSchema.index({ isActive: 1, category: 1, brand: 1, price: 1 });
+ProductSchema.index({ name: 'text', description: 'text', brand: 'text' });

@@ -32,7 +32,11 @@ export class OrdersService {
 
     for (const cartItem of cartItems) {
       const product = cartItem.productId as any;
-      
+
+      if (!product) {
+        throw new BadRequestException('Product in cart no longer exists');
+      }
+
       if (!product.isActive) {
         throw new BadRequestException(`Product ${product.name} is not available`);
       }
@@ -60,6 +64,9 @@ export class OrdersService {
       totalAmount,
       shippingAddress: createOrderDto.shippingAddress,
       notes: createOrderDto.notes,
+      paymentMethod: createOrderDto.paymentMethod,
+      nameClient: createOrderDto.nameClient,
+      phoneClient: createOrderDto.phoneClient,
     });
 
     const savedOrder = await order.save();
@@ -221,4 +228,3 @@ export class OrdersService {
     };
   }
 }
-

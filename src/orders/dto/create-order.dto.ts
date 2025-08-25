@@ -3,27 +3,25 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateOrderDto {
   @ApiProperty({
-    example: '123 Đường ABC, Quận 1',
+    example: '123 Đường Đồng Khởi, Quận 1, TP.HCM',
     description: 'Địa chỉ giao hàng',
-    required: false,
   })
   @IsString()
   @IsNotEmpty()
   shippingAddress: string;
 
   @ApiProperty({
-    example: 'Giao hàng nhanh',
+    example: 'Giao giờ hành chính, gọi trước khi đến',
     description: 'Ghi chú',
     required: false,
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   notes?: string;
 
   @ApiProperty({
-    example: 'Thanh toán khi nhận hàng',
-    description: 'Phương thức thanh toán',
-    required: false,
+    example: 'COD',
+    description: 'Phương thức thanh toán (ví dụ: COD, Credit Card)',
   })
   @IsString()
   @IsNotEmpty()
@@ -32,18 +30,16 @@ export class CreateOrderDto {
   @ApiProperty({
     example: 'Nguyễn Văn A',
     description: 'Tên khách hàng',
-    required: false,
   })
   @IsString()
   @IsNotEmpty()
-  nameClinet: string;
+  nameClient: string;
 
   @ApiProperty({
-    example: '0123445567',
+    example: '0912345678',
     description: 'Số điện thoại khách hàng',
-    required: false,
   })
   @IsString()
   @IsNotEmpty()
-  phoneClinet: string;
+  phoneClient: string;
 }

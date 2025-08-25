@@ -20,7 +20,6 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     // Verify category exists
-    console.log(createProductDto);
     const category = await this.categoryModel.findById(
       createProductDto.category,
     );
@@ -30,6 +29,16 @@ export class ProductsService {
     }
 
     const { priceDetail, discountPrice, ...rest } = createProductDto;
+
+    if (priceDetail <= 0) {
+      throw new BadRequestException('priceDetail must be greater than 0');
+    }
+    if (discountPrice < 0) {
+      throw new BadRequestException('discountPrice cannot be negative');
+    }
+    if (discountPrice > priceDetail) {
+      throw new BadRequestException('discountPrice cannot exceed priceDetail');
+    }
 
     const discountPercent = (discountPrice / priceDetail) * 100;
 
@@ -104,7 +113,6 @@ export class ProductsService {
     // Calculate pagination
     const skip = (page - 1) * limit;
 
-    console.log(filter, 'filter');
     // Execute query
     const [products, total] = await Promise.all([
       this.productModel

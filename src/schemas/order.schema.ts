@@ -59,10 +59,10 @@ export class Order {
   paymentMethod: string;
 
   @Prop({ required: true })
-  nameClinet: string;
+  nameClient: string;
 
   @Prop({ required: true })
-  phoneClinet: string;
+  phoneClient: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

@@ -12,6 +12,8 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -43,17 +45,19 @@ export class OrdersController {
   }
 
   @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   getAllOrders(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
   ) {
-    // Note: In a real app, you'd want to add admin role checking here
     return this.ordersService.findAllOrders(parseInt(page), parseInt(limit));
   }
 
   @Get('admin/stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   getOrderStats() {
-    // Note: In a real app, you'd want to add admin role checking here
     return this.ordersService.getOrderStats();
   }
 
@@ -63,11 +67,12 @@ export class OrdersController {
   }
 
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   updateOrderStatus(
     @Param('id') id: string,
     @Body() updateOrderStatusDto: UpdateOrderStatusDto,
   ) {
-    // Note: In a real app, you'd want to add admin role checking here
     return this.ordersService.updateOrderStatus(id, updateOrderStatusDto);
   }
 }
